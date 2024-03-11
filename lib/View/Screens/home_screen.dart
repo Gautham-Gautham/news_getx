@@ -78,12 +78,22 @@ class HomeScreen extends StatelessWidget {
                       icon: Icon(control.iconTheme()))
                 ],
               ),
-              body: PageView(
-                controller: pageController,
-                onPageChanged: (value) {
-                  control.changeBottomIndex(indx: value);
-                },
-                children: [HomeWidget(), CategoryWidget()],
+              body: Column(
+                children: [
+                  Text(
+                    "Home",
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  Expanded(
+                    child: PageView(
+                      controller: pageController,
+                      onPageChanged: (value) {
+                        control.changeBottomIndex(indx: value);
+                      },
+                      children: [HomeWidget(), CategoryWidget()],
+                    ),
+                  ),
+                ],
               ),
               bottomNavigationBar: GetBuilder<NewsController>(
                 builder: (controller) => BottomNavigationBar(

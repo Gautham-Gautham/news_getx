@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:getx_news/Controller/news_controller.dart';
 import 'package:getx_news/Shared/constant.dart';
 import 'package:getx_news/View/Widgets/list_items.dart';
 
@@ -12,6 +14,7 @@ class CategoryWidget extends StatefulWidget {
 class _CategoryWidgetState extends State<CategoryWidget>
     with SingleTickerProviderStateMixin {
   late TabController? cont;
+  final newsController = Get.put(NewsController());
   @override
   void initState() {
     cont =
@@ -25,7 +28,7 @@ class _CategoryWidgetState extends State<CategoryWidget>
       children: [
         TabBar(
             controller: cont,
-            // isScrollable: true,
+            isScrollable: true,
             tabs: CategoryList.categoryItems.map((e) {
               return Container(
                 child: Text(e),
@@ -35,10 +38,38 @@ class _CategoryWidgetState extends State<CategoryWidget>
           child: TabBarView(
               controller: cont,
               children: CategoryList.categoryItems.map((e) {
-                return ListItems();
+                return FutureBuilder(
+                  future: newsController.getCategory(category: e),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return ListItems(list: snapshot.data!);
+                    } else {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                  },
+                );
               }).toList()),
         )
       ],
     );
   }
 }
+
+Map a = {
+  "status": "ok",
+  "articles": [
+    {
+      "source": {"name": "Axios"},
+      "author": "Axios",
+      "title": "Sam Altman to return to OpenAI board - Axios",
+      "description": "null",
+      "url":
+          "https://www.axios.com/2024/03/08/sam-altman-returns-to-openai-board",
+      "urlToImage": "null",
+      "publishedAt": "2024-03-09T07:20:03Z",
+      "content": "null"
+    },
+  ]
+};
